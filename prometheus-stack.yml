@@ -1,0 +1,27 @@
+version: "3.9"
+
+# Logging settings defaults we can just append to any service config.
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 2000m
+      max-file: "3"
+      tag: '{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}'
+
+volumes:
+  prometheus_data: {}
+
+services:
+  prometheus:
+    <<: *logging
+    image: prom/prometheus:latest
+    hostname: prometheus
+    restart: always
+    user: root
+    ports:
+      - 9090:9090
+    volumes:
+      - prometheus_data:/prometheus
+      - $PWD/prometheus-config.yml:/etc/prometheus/prometheus.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro

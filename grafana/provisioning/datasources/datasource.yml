@@ -1,0 +1,27 @@
+apiVersion: 1
+
+deleteDatasources:
+  - name: Mimir
+    orgId: 1
+
+  - name: Prometheus
+    orgId: 1
+
+datasources:
+- name: Mimir
+  type: prometheus
+  access: proxy
+  orgId: 1
+  url: http://mimir-lb:9010/prometheus
+  jsonData:
+    httpHeaderName1: 'X-Scope-OrgID'
+  secureJsonData:
+    httpHeaderValue1: 'primary'
+  editable: true
+
+- name: Prometheus
+  type: prometheus
+  access: proxy
+  orgId: 1
+  url: http://prometheus:9090
+  editable: true

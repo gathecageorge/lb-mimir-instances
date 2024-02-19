@@ -1,0 +1,26 @@
+version: "3.9"
+
+# Logging settings defaults we can just append to any service config.
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 2000m
+      max-file: "3"
+      tag: '{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}'
+
+volumes:
+  grafana_data: {}
+
+services:
+  grafana:
+    <<: *logging
+    image: grafana/grafana:latest
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    ports:
+      - 3000:3000

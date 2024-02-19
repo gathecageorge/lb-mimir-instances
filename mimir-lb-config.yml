@@ -1,0 +1,37 @@
+target: all
+
+common:
+  storage:
+    backend: s3
+    s3:
+      region: ''
+      endpoint: minio:9000
+      access_key_id: myminio
+      secret_access_key: mypassword
+      insecure: true
+      bucket_name: mimir
+
+# Blocks storage requires a prefix when using a common object storage bucket.
+blocks_storage:
+  storage_prefix: blocks
+  tsdb:
+    dir: /data/ingester
+
+# Use memberlist, a gossip-based protocol, to enable the Mimir replicas to communicate 
+memberlist:
+  join_members: ["mimir-lb-a", "mimir-lb-b", "mimir-lb-c"]
+  randomize_node_name: false
+  advertise_addr: ADVERTISE_ADDR_REPLACE
+
+# ingester:
+#   ring:
+#     replication_factor: 1
+
+limits:
+  max_label_names_per_series: 100
+  ingestion_rate: 100000
+  ingestion_burst_size: 1000000
+  max_global_series_per_user: 0
+
+server:
+  log_level: info
