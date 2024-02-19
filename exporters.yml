@@ -34,12 +34,10 @@ services:
     restart: unless-stopped
     image: gcr.io/cadvisor/cadvisor:v0.47.2
     volumes:
-      # - /var/run/docker.sock:/var/run/docker.sock:ro
       - /:/rootfs:ro
-      - /var/run:/var/run
+      - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker:/var/lib/docker:ro
-      - /etc/machine-id:/etc/machine-id:ro
     command:
       - --docker_only
     labels:
